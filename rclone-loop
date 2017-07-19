@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+SLEEP=${FREQUENCY:-30m}
+
+while true
+do
+  _SYNC_COMMAND="rclone sync /data ${SYNC_DESTINATION}:/'${SYNC_DESTINATION_SUBPATH}'"
+
+  if [ -n "${SYNC_COMMAND}" ]; then
+    _SYNC_COMMAND="${SYNC_COMMAND}"
+  else
+    if [ -z ${SYNC_DESTINATION} ]; then
+      echo "Error: SYNC_DESTINATION environment variable was not passed to the container."
+      exit 1
+    fi
+  fi
+
+  echo "Executing ${_SYNC_COMMAND}"
+  eval "${_SYNC_COMMAND}"
+
+  echo "Sleeping for ${SLEEP}"
+  sleep ${SLEEP}
+done
